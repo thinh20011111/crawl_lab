@@ -132,7 +132,7 @@ class BasePage:
     POPUP_POST = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div[2]/div/div[2]/div[2]/div[{index}]/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div[1]/div/div[1]/div/div[2]/div[2]"
     POPUP_POST_ALT = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div[2]/div/div[2]/div[3]/div[{index}]/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div/div/div[1]/div/div[2]/div[2]"
     COMMENT_POST = "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div[3]/div[{index}]/div/div[1]/div/div[2]/div[1]/div[1]/div/div/div/span/div/div"
-    GOTO_DETAIL_POST = "/html/body/div/div/div/main/div/div[2]/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[1]/div[1]/li/div[2]/p/div/h6/a[2]"
+    GOTO_DETAIL_POST = "//a[contains(text(),'Vài giây trước')]"
     CONTENT_POST = "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[3]/div[1]/div/div/div/div/span"
     
     def find_element(self, locator_type, locator_value):
@@ -517,7 +517,7 @@ class BasePage:
         skip_count = 0  # Biến đếm số bài bỏ qua
 
         # Đọc dữ liệu cũ nếu có từ tệp JSON
-        output_file = "data/post.json" if page else "data/post_user.json"
+        output_file = "data/post_Lab.json" if page else "data/post_user.json"
         existing_data = {}
         if os.path.exists(output_file):
             try:
@@ -703,10 +703,18 @@ class BasePage:
 
                     self.driver.refresh()
                     
-                    # Đăng comment
                     id_post = self.get_id_post()
-                    self.post_comments(in_reply_to_id=id_post)
-                    self.clear_comment_file()
+                    
+                    try:
+                        with open("data/id_post.txt", "a", encoding="utf-8") as f:
+                            f.write(id_post + "\n")  # Thêm \n để mỗi ID trên 1 dòng
+                        print(f"Đã lưu id post vào id_post.txt: {id_post}")
+                    except Exception as id_err:
+                        print(f"Lỗi khi ghi ID post vào file: {id_err}")
+                    # Đăng comment
+                    # id_post = self.get_id_post()
+                    # self.post_comments(in_reply_to_id=id_post)
+                    # self.clear_comment_file()
 
                 except Exception as post_err:
                     print(f"Lỗi khi đăng bài {post['post_index']}: {post_err}")

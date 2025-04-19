@@ -15,6 +15,14 @@ def main():
     service = Service(config.CHROME_DRIVER_PATH)
     chrome_options = Options()
     chrome_options.add_argument("--disable-notifications")  # Chặn thông báo
+    chrome_options.add_argument("--disable-features=PasswordManagerEnabled,PasswordCheck,AutofillServerCommunication,SafeBrowsingEnhancedProtection")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option("useAutomationExtension", False)
+    chrome_options.add_experimental_option("prefs", {
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False
+    })
+    chrome_options.add_argument("--incognito") # Chế độ ẩn danh
     # chrome_options.add_argument("--headless")  # Chế độ không giao diện
     chrome_options.add_argument("--disable-gpu")  # Vô hiệu hóa GPU khi chạy headless
     chrome_options.add_argument("--window-size=1920x1080")  # Thiết lập kích thước cửa sổ để tránh một số vấn đề hiển thị
@@ -43,7 +51,7 @@ def main():
 
         driver.get(config.FACEBOOK_URL)
         base_page.login_facebook(email_facebook, password_facebook)
-        time.sleep(20)
+        time.sleep(50)
         print("Đăng nhập thành công vào Facebook.")
 
         # Lặp qua tất cả các tài khoản và xử lý
