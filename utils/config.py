@@ -6,3 +6,4 @@ class Config:
     FACEBOOK_URL = "https://www.facebook.com/"
     EMSO_URL = "https://lab-fe.emso.vn/"
     ADMIN_URL = "https://cmc-admin.emso.vn/"
+    BASE_URL = "https://lab-sn.emso.vn/api/v1"

@@ -3,7 +3,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
+import urllib.parse
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException, StaleElementReferenceException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
 import ctypes
@@ -58,7 +59,7 @@ class BasePage:
     LOGIN_EMAIL_INPUT = "//input[@id='email' and @type='text']"
     LOGIN_PWD_INPUT = "//input[@id='password' and @type='password']"
     LOGIN_SUBMIT_BTN = "//button[@id='demo-customized-button' and ./div[text()='Đăng nhập']]"
-    PROFILE_ACCOUNT_ICON = "//div[@id='root']/div/div/div/div/header/div/div/div[3]/div/div[2]/div[2]/i"
+    PROFILE_ACCOUNT_ICON = "/html/body/div/div/div[1]/div/header/div/div/div[3]/div/div[2]/div[2]/i"
     INPUT_POST = "//textarea[@name='textInputCreatePost']"
     INPUT_MEDIA = "//input[@type='file' and @accept='image/jpeg,image/png,/.glb,video/mp4,video/avi,video/quicktime,video/Ogg,video/wmv,video/mov' and @multiple and @autocomplete='off']"
     CREATE_POST_BUTTON = "//button[@id='demo-customized-button']//div[text()='Đăng']"
@@ -73,9 +74,9 @@ class BasePage:
     MORE_OPTION = "(//div[@aria-haspopup='menu' and contains(@class, 'x1i10hfl') and contains(@aria-label, 'Hành động với bài viết này')])[{index}]"
     SKIP_BANNER = "//div[contains(text(), 'Tiếp tục')]"
     ITEMS_VIDEO_WATCH = "(//div[@class='x1qjc9v5 x1lq5wgf xgqcy7u x30kzoy x9jhf4c x78zum5 xdt5ytf x1l90r2v xyamay9 xjl7jj']//div[.//span[text()='Video']])[1]/div/div/div/div/div/div/div/div/div/div/a"
-    ITEM_VIDEO_WATCH = "(//div[@class='x1qjc9v5 x1lq5wgf xgqcy7u x30kzoy x9jhf4c x78zum5 xdt5ytf x1l90r2v xyamay9 xjl7jj']//div[.//span[text()='Video']])[1]/div/div/div/div[{index}]/div/div/div/div/div/div/a"
-    TIME_VIDEO_WATCH = "(//div[@class='x1qjc9v5 x1lq5wgf xgqcy7u x30kzoy x9jhf4c x78zum5 xdt5ytf x1l90r2v xyamay9 xjl7jj']//div[.//span[text()='Video']])[1]/div/div/div/div[{index}]/div/div/div/div/div/div/a/div/div/div/div[2]/span"
-    TITLE_VIDEO_WATCH = "(//div[@class='x1qjc9v5 x1lq5wgf xgqcy7u x30kzoy x9jhf4c x78zum5 xdt5ytf x1l90r2v xyamay9 xjl7jj']//div[.//span[text()='Video']])[1]/div/div/div/div[{index}]/div/div/div/div/div/div[2]/span/div/a"
+    ITEM_VIDEO_WATCH = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div/div/div[2]/div/div/div[{index}]/div/div/div/div/div/div[1]/a"
+    TIME_VIDEO_WATCH = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div/div/div[2]/div/div/div[{index}]/div/div/div/div/div/div[1]/a/div/div/div/div[2]/span"
+    TITLE_VIDEO_WATCH = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div/div/div[2]/div/div/div[{index}]/div/div/div/div/div/div[2]/span[1]/div[1]/a/span/span"
     NEXT_REELS = "//div[@aria-label='Thẻ tiếp theo' and contains(@class, 'x1i10hfl')]"
     OPEN_FORM_MOMENT = "//button[contains(@class, 'MuiButton-root') and .//p[text()='Khoảnh khắc']]"
     INPUT_UPLOAD_MOMENT = "//input[@id='files' and @name='files']"
@@ -131,9 +132,28 @@ class BasePage:
     
     POPUP_POST = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div[2]/div/div[2]/div[2]/div[{index}]/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div[1]/div/div[1]/div/div[2]/div[2]"
     POPUP_POST_ALT = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div[2]/div/div[2]/div[3]/div[{index}]/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div/div/div[1]/div/div[2]/div[2]"
-    COMMENT_POST = "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div[3]/div[{index}]/div/div[1]/div/div[2]/div[1]/div[1]/div/div/div/span/div/div"
-    GOTO_DETAIL_POST = "//a[contains(text(),'Vài giây trước')]"
-    CONTENT_POST = "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[3]/div[1]/div/div/div/div/span"
+    POPUP_POST_ALT_2 = "(//span/div/span[1]/span/span/a[contains(@class, 'x1i10hfl') and contains(@class, 'xjbqb8w') and @role='link' and @target='_blank'])[{index}]"
+    MORE_OPTION_POST = "//div[@aria-posinset='{index}']//div[contains(@class, 'xqcrz7y') and contains(@class, 'x78zum5')]"
+    SHOW_POPUP_GET_ID = "(//div[@role='menuitem' and .//span[text()='Nhúng']])[1]"
+    INPUT_GET_ID = "(//input[contains(@placeholder, 'Mã nhúng sẽ xuất hiện')])[1]"
+    
+    COMMENT_POST = "/html/body/div[1]/div/div[1]/div/div[5]/div/div/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div[2]/div[3]/div[{index}]/div/div/div/div[1]/div/div[2]/div[1]/div[1]/div/div/div"
+    COMMENT_POST_2 = "/html/body/div[1]/div/div[1]/div/div[5]/div/div/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div[2]/div[3]/div[{index}]/div/div/div/div[1]/div[2]/div[1]/div[1]/div/div/div"
+    GOTO_DETAIL_POST = "/html/body/div/div/main/div/div[2]/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[1]/div[1]/li/div[2]/p/div/h6/a[2]"
+    GOTO_DETAIL_POST_USER = "/html/body/div/div/main/div/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/div/div[1]/div[1]/div[1]/li/div[2]/p/div/h6/a"
+    
+    
+    DETAIL_POST_FB = "//div[@aria-posinset='{index}']//div[13]/div/div/div[2]/div/div[2]/div/div[2]/span/div/span[1]/span/span/a[1]"
+    
+    CONTENT_POST = "/html/body/div[1]/div/div[1]/div/div[5]/div/div/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[3]/div[1]"
+    
+    FILTER_COMMENT = "/html/body/div[1]/div/div[1]/div/div[5]/div/div/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[4]/div/div/div[2]/div[2]/div/div/span"
+    ALL_COMMENT = "//div[contains(@class, 'html-div')]//span[text()='Tất cả bình luận']"
+    OPEN_TAB_COMMENT = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[1]/div/div[2]/div/div/div/div[1]/div/div/div[2]/div[2]/div/div/div/div[4]/div/div/div/div[1]/div"
+    COMMENT_XPATH_TEMPLATE = "(//span[@lang='vi-VN' and contains(@class, 'x193iq5w')])[{index}]"
+    EXPAND_CONTENT = "/html/body/div[1]/div/div[1]/div/div[5]/div/div/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div/div/div/div[13]/div/div/div[3]/div[1]//div[@role='button' and text()='Xem thêm']"
+    
+    POST_SHARE = "//div[@aria-posinset='{index}']//div[13]/div/div/div[3]/div/div/div/div[2]/div/div[2]/div[2]/span"
     
     def find_element(self, locator_type, locator_value):
         return self.driver.find_element(locator_type, locator_value)
@@ -392,8 +412,12 @@ class BasePage:
         """
         Lấy ID của bài post từ URL hiện tại sau khi nhấp vào bài viết.
         """
-        self.wait_for_element_present(self.GOTO_DETAIL_POST)
-        self.click_element(self.GOTO_DETAIL_POST)
+        if self.is_element_present_by_xpath(self.GOTO_DETAIL_POST):
+            self.wait_for_element_present(self.GOTO_DETAIL_POST)
+            self.click_element(self.GOTO_DETAIL_POST)
+        else:
+            self.wait_for_element_present(self.GOTO_DETAIL_POST_USER)
+            self.click_element(self.GOTO_DETAIL_POST_USER)
         
         # Lấy URL hiện tại của trang
         current_url = self.driver.current_url
@@ -515,9 +539,10 @@ class BasePage:
         post_data = []  # Danh sách để lưu dữ liệu của các bài post hợp lệ
         current_post_index = index_start  # Bắt đầu từ index_start
         skip_count = 0  # Biến đếm số bài bỏ qua
+        success = False  # Theo dõi trạng thái đăng bài thành công
 
         # Đọc dữ liệu cũ nếu có từ tệp JSON
-        output_file = "data/post_Lab.json" if page else "data/post_user.json"
+        output_file = "data/post.json" if page else "data/post_user.json"
         existing_data = {}
         if os.path.exists(output_file):
             try:
@@ -526,6 +551,7 @@ class BasePage:
             except Exception as json_err:
                 print(f"Lỗi khi đọc dữ liệu từ tệp JSON cũ: {json_err}")
 
+        # Kiểm tra xem trang có bài post hay không
         if not self.is_element_present_by_xpath(self.POST.replace("{index}", '1')):
             raise Exception(f"Page lỗi không lấy được post")
 
@@ -545,6 +571,17 @@ class BasePage:
                 # Cuộn đến vị trí của phần tử chính
                 self.driver.execute_script("arguments[0].scrollIntoView();", post_element)
                 self.wait_for_element_present(self.POST.replace("{index}", str(current_post_index + 1)))
+
+                # Kiểm tra nếu bài post là bài chia sẻ (POST_SHARE tồn tại)
+                share_xpath = self.POST_SHARE.replace("{index}", str(current_post_index))
+                if self.is_element_present_by_xpath(share_xpath):
+                    print(f"Post {current_post_index} là bài chia sẻ, bỏ qua.")
+                    current_post_index += 1
+                    skip_count += 1
+                    if skip_count >= 20:
+                        print(f"Đã bỏ qua quá 20 bài, dừng quá trình tại page - {crawl_page}.")
+                        break
+                    continue
 
                 # Kiểm tra tiêu đề
                 message_elements = post_element.find_elements(By.XPATH, ".//div[contains(@data-ad-comet-preview, 'message')]")
@@ -599,7 +636,7 @@ class BasePage:
                                 img_file.write(response.content)
                             image_paths.append(image_name)
                     except Exception:
-                        print(f"Lỗi khi tải ảnh")
+                        print(f"Lỗi khi tải ảnh cho post {current_post_index}")
                         break
 
                 if not image_paths:
@@ -620,25 +657,16 @@ class BasePage:
                     "messages": messages,
                     "images": image_paths
                 })
-                collected_messages.add(content)
-                # print(f"Đã xử lý post {current_post_index}. Text: {messages}, Ảnh hợp lệ: {len(image_paths)}")
-                # time.sleep(600)
+                collected_messages.add(messages)  # Thêm messages vào tập để tránh trùng
                 current_post_index += 1  # Chỉ tăng index sau khi xử lý thành công bài
 
             except Exception as e:
-                print(f"Lỗi khi xử lý phần tử tại index {current_post_index}")
+                print(f"Lỗi khi xử lý phần tử tại index {current_post_index}: {e}")
                 current_post_index += 1
                 skip_count += 1
-                
-                # ////////////////////////////
-                post_xpath = self.POST.replace("{index}", str(current_post_index))
-                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, post_xpath)))
-                post_element = self.driver.find_element(By.XPATH, post_xpath)
-
-                # Cuộn đến vị trí của phần tử chính
-                self.driver.execute_script("arguments[0].scrollIntoView();", post_element)
-                # ////////////////////////////
-                
+                if skip_count >= 20:
+                    print(f"Đã bỏ qua quá 20 bài, dừng quá trình tại page - {crawl_page}.")
+                    break
                 continue
 
         # Đăng bài tuần tự sau khi thu thập đủ
@@ -665,9 +693,9 @@ class BasePage:
 
             for post in post_data:
                 try:
-                    self.create_post(post["content"], post["images"])
-                    
+                    self.create_post(post["content"] if post["content"] is not None else post["messages"], post["images"])
                     print(f"Đã đăng bài thành công cho post {post['post_index']}")
+                    success = True  # Đặt success thành True khi đăng bài thành công
 
                     # Cập nhật số lượng post thành công
                     success_count += 1
@@ -702,22 +730,26 @@ class BasePage:
                         print(f"Lỗi khi lưu dữ liệu vào tệp JSON: {json_err}")
 
                     self.driver.refresh()
-                    
+
+                    # Đăng comment
+                    time.sleep(5)
                     id_post = self.get_id_post()
                     
+                    # Lưu id_post vào file id_post.txt
                     try:
-                        with open("data/id_post.txt", "a", encoding="utf-8") as f:
-                            f.write(id_post + "\n")  # Thêm \n để mỗi ID trên 1 dòng
-                        print(f"Đã lưu id post vào id_post.txt: {id_post}")
+                        with open("data/id_post.txt", "a", encoding="utf-8") as id_file:
+                            id_file.write(f"{id_post}\n")
+                        print(f"Đã lưu id_post {id_post} vào id_post.txt")
                     except Exception as id_err:
-                        print(f"Lỗi khi ghi ID post vào file: {id_err}")
-                    # Đăng comment
-                    # id_post = self.get_id_post()
-                    # self.post_comments(in_reply_to_id=id_post)
-                    # self.clear_comment_file()
+                        print(f"Lỗi khi lưu id_post vào id_post.txt: {id_err}")
+                        
+                    # self.post_comments(status_id=id_post)
+                    self.clear_comment_file()
 
                 except Exception as post_err:
                     print(f"Lỗi khi đăng bài {post['post_index']}: {post_err}")
+                    self.clear_comment_file()
+                    continue
 
         except Exception as login_err:
             print(f"Lỗi khi đăng nhập hoặc truy cập trang đăng bài: {login_err}")
@@ -726,106 +758,216 @@ class BasePage:
             self.logout()
             print("Đã đăng xuất khỏi tài khoản.")
 
-    
-    def crawl_comments(self, post_index):
-        output_file = "data/comment.txt"
+        return success  # Trả về True nếu có ít nhất một bài đăng thành công, False nếu không
 
-        # Danh sách các XPath khả thi
-        popup_xpaths = [
-            self.POPUP_POST.replace("{index}", str(post_index)),
-            self.POPUP_POST_ALT.replace("{index}", str(post_index))  # Thay thế bằng XPath thứ 2
-        ]
+    def extract_facebook_post_info(self, input_xpath):
+        element = self.driver.find_element(By.XPATH, input_xpath)
+        raw_value = element.get_attribute("value")
 
-        # Thử mở popup với cả hai XPath
-        popup_opened = False
-        content_text = ""  # Biến lưu content của bài viết
-        for popup_xpath in popup_xpaths:
-            try:
-                WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, popup_xpath))).click()
-                time.sleep(3)  # Chờ comment load
-                
-                # Kiểm tra xem popup có mở thực sự không bằng cách tìm phần tử trong popup
-                if self.driver.find_elements(By.XPATH, self.CONTENT_POST):
-                    popup_opened = True
-                    print("Popup đã mở thành công.")
-                else:
-                    print("Popup không hiển thị sau khi click.")
-                    continue
-
-                # --- LẤY NỘI DUNG BÀI VIẾT GIỮ ĐÚNG CẤU TRÚC VÀ ICON ---
-                content_elements = self.driver.find_elements(By.XPATH, self.CONTENT_POST)
-                content_parts = []
-
-                for element in content_elements:
-                    self.driver.execute_script("arguments[0].scrollIntoView();", element)  # Cuộn vào element
-                    time.sleep(1)  # Đợi load
-                    
-                    # Lấy nội dung với định dạng HTML để đảm bảo giữ nguyên cấu trúc
-                    content_html = element.get_attribute("innerHTML")
-                    
-                    # Xử lý để thay thế các icon (emoji) bằng alt text
-                    soup = BeautifulSoup(content_html, "html.parser")
-                    for img in soup.find_all("img"):
-                        alt_text = img.get("alt", "")
-                        img.replace_with(alt_text)
-                    
-                    cleaned_text = soup.get_text(" ", strip=True)
-                    
-                    if cleaned_text:
-                        content_parts.append(cleaned_text)
-
-                # Ghép các phần nội dung lại thành một bài viết hoàn chỉnh
-                content_text = "\n".join(content_parts)
-                break  # Nếu mở được popup thì thoát vòng lặp
-            except Exception as e:
-                print(f"Lỗi mở popup với XPath {popup_xpath}")
-                continue  # Thử XPath tiếp theo nếu thất bại
-
-        if not popup_opened:
-            print(f"Không thể mở popup cho post {post_index}, bỏ qua.")
+        if not raw_value:
             return None
 
-        # Lấy comment từ COMMENT_POST với index tăng dần
-        comment_index = 1
-        comments_data = []
-        while True:
-            try:
-                comment_xpath = self.COMMENT_POST.replace("{index}", str(comment_index))
-                comment_element = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.XPATH, comment_xpath)))
-                
-                # Lấy nội dung comment với cấu trúc HTML
-                comment_html = comment_element.get_attribute("innerHTML")
-                
-                # Xử lý HTML để giữ nguyên icon và xuống dòng
-                soup = BeautifulSoup(comment_html, "html.parser")
-                for img in soup.find_all("img"):
-                    alt_text = img.get("alt", "")
-                    img.replace_with(alt_text)
-                
-                cleaned_comment = soup.get_text(" ", strip=True)
-                
-                if cleaned_comment:
-                    comments_data.append(cleaned_comment)
-                
-                comment_index += 1
-            except:
-                break  # Khi không tìm thấy comment mới, thoát vòng lặp
-            
-        # Lưu tất cả comment vào file, mỗi comment trên một dòng
+        # Tìm phần href=... trong raw_value
+        match = re.search(r'href=([^&"\']+)', raw_value)
+        if match:
+            encoded_url = match.group(1)
+            decoded_url = urllib.parse.unquote(encoded_url)
+            return decoded_url
+        else:
+            return None
+
+    def crawl_comments(self, post_index):
+        output_file = "data/comment.txt"
+        content_text = ""
+
+        # Step 1: Click MORE_OPTION_POST
         try:
-            with open(output_file, "a", encoding="utf-8") as file:
-                for comment in comments_data:
-                    file.write(comment + "\n")
-            print(f"Đã lưu {len(comments_data)} comment vào {output_file}")
+            more_btn_xpath = self.MORE_OPTION_POST.replace("{index}", str(post_index))
+            self.click_element(more_btn_xpath)
+            print("Clicked MORE_OPTION_POST")
+            time.sleep(2)
         except Exception as e:
-            print(f"Lỗi khi lưu dữ liệu vào comment.txt: {e}")
-            
-        # Đóng popup nếu cần (nếu popup không tự đóng)
+            print(f"Failed to click MORE_OPTION_POST: {e}")
+            return None
+
+        # Step 2: Click SHOW_POPUP_GET_ID
         try:
-            self.driver.find_element(By.XPATH, "//button[contains(@aria-label, 'Close')]").click()
-        except:
-            pass
+            get_id_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, self.SHOW_POPUP_GET_ID))
+            )
+            get_id_btn.click()
+            print("Clicked SHOW_POPUP_GET_ID")
+            time.sleep(2)
+        except Exception as e:
+            print(f"Failed to click SHOW_POPUP_GET_ID: {e}")
+            return None
+
+        # Step 3: Get post URL via INPUT_GET_ID
+        try:
+            detail_post_xpath = self.DETAIL_POST_FB.replace("{index}", str(post_index))
+            detail_post_element = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, detail_post_xpath))
+            )
+            detail_post_element.click()
+            time.sleep(3)
+            post_url = self.driver.current_url
+            print(f"Primary method - Extracted Post URL from DETAIL_POST_FB: {post_url}")
+        except Exception as e1:
+            print(f"Primary method failed: {e1}")
+            print("Trying fallback method using INPUT_GET_ID...")
+            try:
+                post_url = self.extract_facebook_post_info(self.INPUT_GET_ID)
+                if not post_url:
+                    print("Fallback failed: Empty URL from INPUT_GET_ID")
+                    return None
+                print(f"Fallback method - Extracted Post URL: {post_url}")
+            except Exception as e2:
+                print(f"Fallback method also failed: {e2}")
+                return None
             
+        # Step 4: Navigate to post page
+        try:
+            self.driver.get(post_url)
+            print(f"Navigated to post page: {post_url}")
+            time.sleep(5)
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
+        except Exception as e:
+            print(f"Failed to navigate to post URL: {e}")
+            return None
+
+        # Step 5: Click Filter Comment and All Comment buttons
+        try:
+            # Scroll to and click FILTER_COMMENT
+            filter_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, self.FILTER_COMMENT))
+            )
+            self.driver.execute_script("arguments[0].scrollIntoView();", filter_button)
+            filter_button.click()
+            print("Clicked FILTER_COMMENT button")
+            time.sleep(2)
+
+            # Click ALL_COMMENT
+            all_comments_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, self.ALL_COMMENT))
+            )
+            self.driver.execute_script("arguments[0].scrollIntoView();", all_comments_button)
+            all_comments_button.click()
+            print("Clicked ALL_COMMENT button")
+            time.sleep(2)
+        except Exception as e:
+            print(f"Failed to click filter/all comments buttons: {e}")
+
+        # Step 6: Scrape content
+        try:
+            self.wait_for_element_present(self.CONTENT_POST, timeout=10)
+            
+            if self.is_element_present_by_xpath(self.EXPAND_CONTENT):
+                expand_button = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.XPATH, self.EXPAND_CONTENT))
+                )
+                self.driver.execute_script("arguments[0].scrollIntoView();", expand_button)
+                expand_button.click()
+                time.sleep(1)  # Wait for content to expand
+                print("Clicked 'Xem thêm' button")
+            else:
+                print("No 'Xem thêm' button found or already expanded")
+                
+            # Scrape post content
+            content_elements = self.driver.find_elements(By.XPATH, self.CONTENT_POST)
+            content_parts = []
+            for element in content_elements:
+                self.driver.execute_script("arguments[0].scrollIntoView();", element)
+                time.sleep(1)
+                content_html = element.get_attribute("innerHTML")
+                soup = BeautifulSoup(content_html, "html.parser")
+                for img in soup.find_all("img"):
+                    img.replace_with(img.get("alt", ""))
+                cleaned_text = soup.get_text(" ", strip=True)
+                if cleaned_text:
+                    content_parts.append(cleaned_text)
+            content_text = "\n".join(content_parts)
+            print(f"Scraped post content: {content_text[:100]}...")
+
+            # Step 7: Scrape comments
+            comment_index = 1
+            comments_data = []
+            min_comments = 20
+            max_comments = 30
+            max_attempts = 100  # Giới hạn số lần thử để tránh vòng lặp vô hạn
+            consecutive_failures = 0  # Đếm số lần thất bại liên tiếp
+
+            while len(comments_data) < max_comments and max_attempts > 0:
+                try:
+                    # Thử với COMMENT_POST trước
+                    comment_xpath = self.COMMENT_POST.replace("{index}", str(comment_index))
+                    comment_element = WebDriverWait(self.driver, 3).until(
+                        EC.presence_of_element_located((By.XPATH, comment_xpath))
+                    )
+                    # Cuộn đến comment trước khi lấy nội dung
+                    self.driver.execute_script("arguments[0].scrollIntoView();", comment_element)
+                    time.sleep(1)  # Chờ comment hiển thị
+                    comment_html = comment_element.get_attribute("innerHTML")
+                    soup = BeautifulSoup(comment_html, "html.parser")
+                    for img in soup.find_all("img"):
+                        img.replace_with(img.get("alt", ""))
+                    cleaned_comment = soup.get_text(" ", strip=True)
+                    if cleaned_comment:
+                        comments_data.append(cleaned_comment)
+                        consecutive_failures = 0  # Đặt lại số lần thất bại khi crawl thành công
+                    comment_index += 1
+                    max_attempts -= 1
+                except:
+                    # Nếu COMMENT_POST thất bại, thử với COMMENT_POST_2
+                    try:
+                        comment_xpath = self.COMMENT_POST_2.replace("{index}", str(comment_index))
+                        comment_element = WebDriverWait(self.driver, 3).until(
+                            EC.presence_of_element_located((By.XPATH, comment_xpath))
+                        )
+                        # Cuộn đến comment trước khi lấy nội dung
+                        self.driver.execute_script("arguments[0].scrollIntoView();", comment_element)
+                        time.sleep(1)  # Chờ comment hiển thị
+                        comment_html = comment_element.get_attribute("innerHTML")
+                        soup = BeautifulSoup(comment_html, "html.parser")
+                        for img in soup.find_all("img"):
+                            img.replace_with(img.get("alt", ""))
+                        cleaned_comment = soup.get_text(" ", strip=True)
+                        if cleaned_comment:
+                            comments_data.append(cleaned_comment)
+                            consecutive_failures = 0  # Đặt lại số lần thất bại khi crawl thành công
+                        comment_index += 1
+                        max_attempts -= 1
+                    except:
+                        # Nếu cả hai đều thất bại, tăng số lần thất bại và thử index tiếp theo
+                        print(f"Failed to crawl comment at index {comment_index}, trying next index...")
+                        consecutive_failures += 1
+                        comment_index += 1
+                        max_attempts -= 1
+                        # Nếu thất bại quá 3 lần liên tiếp, dừng crawl comment
+                        if consecutive_failures > 3:
+                            print(f"Stopped crawling comments after {consecutive_failures} consecutive failures.")
+                            break
+                        continue
+
+            # Kiểm soát số lượng comment
+            if len(comments_data) < min_comments:
+                print(f"Only {len(comments_data)} comments available, taking all.")
+            else:
+                comments_data = comments_data[:max_comments]  # Giới hạn tối đa 30 comment
+                print(f"Limited to {len(comments_data)} comments (between 20-30).")
+
+            # Save comments
+            try:
+                with open(output_file, "a", encoding="utf-8") as file:
+                    for comment in comments_data:
+                        file.write(comment + "\n")
+                print(f"Saved {len(comments_data)} comments to {output_file}")
+            except Exception as e:
+                print(f"Error saving comments: {e}")
+        except Exception as e:
+            print(f"Error scraping content/comments: {e}")
+            return None
+
         return content_text
 
     def clear_comment_file(self, comment_file="data/comment.txt"):
@@ -860,14 +1002,8 @@ class BasePage:
             print(f"Lỗi khi đọc comment: {e}")
             return []
 
-    def post_comments(self, in_reply_to_id, delay=2):
-        """
-        Gửi comment từ file comment.txt lên API với token từ file tokens.json.
-        - Mỗi comment dùng một token ngẫu nhiên, không trùng trong cùng một lần chạy.
-        - `delay`: Thời gian chờ giữa các lần gửi để tránh bị block.
-        """
-
-        url = "https://prod-sn.emso.vn/api/v1/statuses"
+    def post_comments(self, status_id, delay=2):
+        url = f"https://lab-sn.emso.vn/api/v1/statuses/{status_id}/comments"
 
         # Đọc danh sách token từ file
         tokens_file = "data/tokens.json"
@@ -911,13 +1047,25 @@ class BasePage:
 
             headers = {
                 'accept': 'application/json, text/plain, */*',
+                'accept-language': 'vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5',
                 'authorization': f'Bearer {token}',
                 'content-type': 'application/json',
+                'origin': 'https://emso.vn',
+                'priority': 'u=1, i',
+                'referer': 'https://emso.vn/',
+                'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-site',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'
             }
             
             payload = json.dumps({
+                "id": random.random(),  # Tạo số ngẫu nhiên như trong curl example
                 "status": comment,
-                "in_reply_to_id": in_reply_to_id,
+                "status_id": str(status_id),
                 "sensitive": False,
                 "media_ids": [],
                 "spoiler_text": "",
@@ -925,25 +1073,19 @@ class BasePage:
                 "poll": None,
                 "extra_body": None,
                 "tags": [],
-                "page_owner_id": None,
+                "page_owner_id": None
             })
 
-            print(f"\n📌 Gửi comment: \"{comment}\" vào bài viết ID: {in_reply_to_id} với token: {token[:10]}...")
+            print(f"\n📌 Gửi comment: \"{comment}\" vào bài viết ID: {status_id} với token: {token[:10]}...")
 
             try:
                 response = requests.post(url, data=payload, headers=headers)
-                response_text = response.text  # Đọc phản hồi dưới dạng text
-
-                # print(f"📌 Response Status Code: {response.status_code}")
-                # print(f"📌 Response Body: {response_text}")  # In phản hồi để debug
-                # print(f"📌 Response payload: {payload}")  # In phản hồi để debug
-                # print(f"📌 Response url: {url}")  # In phản hồi để debug
-                
+                response_text = response.text
 
                 if response.status_code == 200:
                     print(f"✅ Đã gửi comment thành công: {comment}")
                 elif response.status_code == 404:
-                    print(f"⚠️ Lỗi 404: Bài viết không tồn tại hoặc đã bị xóa. ID post: in_reply_to_id")
+                    print(f"⚠️ Lỗi 404: Bài viết không tồn tại hoặc đã bị xóa. ID post: {status_id}")
                 elif response.status_code == 500:
                     print(f"❌ Lỗi máy chủ (500): API có thể đang gặp vấn đề hoặc payload không đúng.")
                 else:
@@ -993,6 +1135,8 @@ class BasePage:
         page_name = self.extract_username_from_url(crawl_page)
         print(f"page_username = {page_name}")
         self.driver.get(f"https://www.facebook.com/{page_name}/videos")
+        
+        # time.sleep(500)
 
         post_data = []  # List to store valid post data
         current_post_index = index_start  # Start from index_start
@@ -1154,7 +1298,6 @@ class BasePage:
                 self.logout()
                 print("Logged out from account.")
 
-
     def create_posts(self, post_data, username, password, post_page, output_file):
         """Helper method to create posts if no items were found"""
         if not post_data:
@@ -1217,9 +1360,10 @@ class BasePage:
             print(f"Error getting video duration: {e}")
             return None
     
-    def get_and_create_moment(self, username, password, nums_post):
+    def get_and_create_moment(self, nums_post):
         self.driver.get("https://www.facebook.com/reel/")
         self.click_element(self.NEXT_REELS)
+        self.click_element(self.OPEN_TAB_COMMENT)
 
         post_data = []  # List to store valid post data
         output_file = "data/moment.json"
@@ -1253,9 +1397,16 @@ class BasePage:
 
                 # Check if message_elements is iterable
                 if isinstance(message_elements, list) or hasattr(message_elements, '__iter__'):
-                    messages = [re.sub(r'[^\w\s,.\'\"#]', '', message.text) for message in message_elements]
+                    messages = [
+                        re.sub(r'\b(Xem thêm|Ẩn bản dịch)\b', '', 
+                            re.sub(r'[^\w\s,.\'\"#]', '', message.text)).strip()
+                        for message in message_elements
+                    ]
                 else:
-                    messages = [re.sub(r'[^\w\s,.\'\"#]', '', message_elements.text)]
+                    messages = [
+                        re.sub(r'\b(Xem thêm|Ẩn bản dịch)\b', '', 
+                            re.sub(r'[^\w\s,.\'\"#]', '', message_elements.text)).strip()
+                    ]
 
                 # Check if messages list is empty or only contains blank text
                 if not messages or all(not msg.strip() for msg in messages):
@@ -1304,7 +1455,6 @@ class BasePage:
                 })
 
                 print(f"Processed post {current_post_index}. Text: {shortened_messages}, Valid video: {len(video_path)}")
-                self.click_element(self.NEXT_REELS)
 
             except Exception as e:
                 print(f"Error processing element at index {current_post_index}: {e}")
@@ -1327,33 +1477,43 @@ class BasePage:
         # Login and create posts on post_page
         if post_data:
             try:
-                self.login_emso(username, password)
-                WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.XPATH, self.OPEN_FORM)))
-                self.wait_for_element_present(self.OPEN_FORM)
-
-                if not self.is_element_present_by_xpath(self.OPEN_FORM):
-                    self.driver.refresh()
-
-                # Iterate through all posts in post_data
-                for index, post in enumerate(post_data):
-                    try:
-                        self.create_moment(post["messages"][0], post["video"])
-                        print(f"Đã đăng bài thành công cho post {index + 1}")
-                    except Exception as post_err:
-                        print(f"Lỗi khi đăng bài {index + 1}: {post_err}")
-
+                # Crawl comment
+                time.sleep(3)
+                comments = self.get_random_comments()
+                if comments:
+                    self.save_comments_to_file(comments)
+                else:
+                    print("⚠ Không có bình luận nào để lưu.")
+                        
+                first_post = post_data[0]
+                if first_post['messages']:
+                    print("Messages đầu tiên:", first_post['messages'][0])
+                
+                # In đường dẫn video
+                print("Video path:", first_post['video'])
+                video_file = f"media/{first_post['video']}"
+                print("Video file path:", video_file)
+                
+                # Đăng lên EMSO
+                print("🔄 Chuyển sang EMSO để đăng video...")
+                if self.login_emso_create(first_post['messages'][0], [video_file]):
+                    print("✅ Đăng bài thành công, quay lại TikTok...")
+                    
+                else:
+                    print("⚠ Đăng bài thất bại, quay lại TikTok...")
+                
+                
+                
             except Exception as login_err:
                 print(f"Lỗi khi đăng nhập hoặc truy cập trang đăng bài: {login_err}")
 
             finally:
-                self.logout()
-                print("Đã đăng xuất khỏi tài khoản.")
-
                 # Clear the output file after posting all collected posts
                 try:
                     with open(output_file, "w", encoding="utf-8") as json_file:
                         json.dump({}, json_file, ensure_ascii=False, indent=4)
                     print(f"Dữ liệu đã được xóa khỏi {output_file} sau khi đăng bài thành công.")
+                    self.click_element(self.NEXT_REELS)
                 except Exception as json_err:
                     print(f"Lỗi khi xóa dữ liệu trong tệp JSON: {json_err}")
 
@@ -1709,7 +1869,173 @@ class BasePage:
                 return False  # Không tìm thấy ảnh sau khi cập nhật
         except Exception as e:
             return False  # Trả về False nếu có lỗi xảy ra
+        
+    def get_random_token(self, tokens_file="data/token_create_moment.json"):
+        """Lấy một token ngẫu nhiên từ file JSON."""
+        try:
+            with open(tokens_file, "r", encoding="utf-8") as file:
+                tokens = json.load(file)  # Đọc danh sách token
 
+                if not tokens:
+                    print("⚠ Không có token nào trong file.")
+                    return None
+
+                return random.choice(tokens)  # Chọn ngẫu nhiên một token
+        except Exception as e:
+            print(f"⚠ Lỗi đọc file token: {e}")
+            return None
+
+    def login_emso_create(self, title, image_names):
+        token = self.get_random_token()
+        
+        file_path = image_names[0]  # Lấy file_path từ danh sách
+        print(f"Debug - Uploading file: {file_path}")
+        media_ids = self.upload(file_path=file_path, file_name=os.path.basename(file_path), token=token)
+        
+        if media_ids:
+            post_id = self.statuses(token=token, content=title, media_ids=[media_ids])
+            print("ID post:", post_id)
+            
+            if post_id:
+                print(f"📢 Chuẩn bị gọi post_comments với ID bài viết: {post_id}")
+                self.post_comments(status_id=post_id)
+                self.clear_comment_file()
+                
+                video_folder = "videos"
+                try:
+                    for filename in os.listdir(video_folder):
+                        file_to_remove = os.path.join(video_folder, filename)
+                        if os.path.isfile(file_to_remove):
+                            os.remove(file_to_remove)
+                            print(f"🗑️ Đã xóa vĩnh viễn file: {file_to_remove}")
+                    print(f"🗑️ Đã xóa toàn bộ file trong thư mục {video_folder}")
+                except Exception as e:
+                    print(f"⚠ Lỗi khi xóa file trong thư mục {video_folder}: {e}")
+                return True
+        return False
+
+    def upload(self, file_path, file_name, token, channel_id=2, privacy=1, mime_type="video/mp4"):
+        if not os.path.exists(file_path):
+            print(f"⚠ File không tồn tại: {file_path}")
+            return None
+
+        try:
+            with open("data/token_upload.json", "r", encoding="utf-8") as f:
+                token_data = json.load(f)
+                if isinstance(token_data, list):
+                    token_upload = random.choice(token_data)
+                elif isinstance(token_data, dict):
+                    token_upload = token_data.get("token")
+                else:
+                    raise ValueError("Định dạng token_upload.json không hợp lệ")
+        except Exception as e:
+            print(f"⚠ Lỗi đọc token_upload.json: {e}")
+            return None
+
+        url = "https://prod-pt.emso.vn/api/v1/videos/upload"
+        headers = {
+            "accept": "application/json, text/plain, */*",
+            "authorization": f"Bearer {token_upload}",
+            "origin": "https://emso.vn",
+            "referer": "https://emso.vn/",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+        }
+
+        files = {
+            "videofile": (file_name, open(file_path, "rb"), mime_type),
+            "name": (None, file_name),
+            "token": (None, token),
+            "channelId": (None, str(channel_id)),
+            "privacy": (None, str(privacy)),
+            "mimeType": (None, mime_type)
+        }
+
+        try:
+            response = requests.post(url, headers=headers, files=files)
+            response_data = response.json()
+            if response.status_code == 200 and "id" in response_data:
+                return response_data["id"]
+            else:
+                print(f"⚠ Lỗi tải video: {response.text}")
+                return None
+        except Exception as e:
+            print(f"⚠ Lỗi kết nối API: {e}")
+            return None
+        
+    def statuses(self, token, content, media_ids, post_type="moment", visibility="public"):
+        """Đăng bài lên EMSO và trả về ID bài đăng."""
+        
+        url = "https://prod-sn.emso.vn/api/v1/statuses"
+        headers = {
+            "accept": "application/json, text/plain, */*",
+            "authorization": f"Bearer {token}",
+            "content-type": "application/json",
+            "origin": "https://emso.vn",
+            "referer": "https://emso.vn/",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+        }
+
+        payload = {
+            "status": content,
+            "post_type": post_type,
+            "visibility": visibility,
+            "media_ids": media_ids,
+        }
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            response_data = response.json()
+
+            if response.status_code == 200 and "id" in response_data:
+                return response_data["id"]
+            else:
+                print(f"⚠ Lỗi đăng bài: {response_data}")
+                return None
+        except Exception as e:
+            print(f"⚠ Lỗi kết nối API: {e}")
+            return None
+
+    def get_random_comments(self):
+        """Lấy số lượng bình luận ngẫu nhiên từ video TikTok, bắt đầu từ bình luận thứ 3."""
+        comments = []
+        num_comments = random.randint(1, 20)  # Chọn số lượng bình luận ngẫu nhiên
+
+        # Chờ bình luận thứ 3 xuất hiện trước khi tiếp tục
+        third_comment_xpath = self.COMMENT_XPATH_TEMPLATE.format(2)
+        try:
+            WebDriverWait(self.driver, 30).until(
+                EC.presence_of_element_located((By.XPATH, third_comment_xpath))
+            )
+        except Exception as e:
+            print(f"⚠ Không tìm thấy bình luận thứ 3: {e}")
+            return []
+
+        # Lấy bình luận từ vị trí thứ 3 trở đi
+        i = 3  # Bắt đầu từ comment số 3
+        while len(comments) < num_comments:
+            comment_xpath = self.COMMENT_XPATH_TEMPLATE.format(i)
+            try:
+                comment_element = WebDriverWait(self.driver, 3).until(
+                    EC.presence_of_element_located((By.XPATH, comment_xpath))
+                )
+                comment_text = comment_element.text.strip()
+                if comment_text:
+                    comments.append(comment_text)
+            except Exception:
+                break  # Nếu không tìm thấy comment tiếp theo, dừng vòng lặp
+            i += 1  # Tiếp tục lấy comment tiếp theo
+
+        return comments
+        
+    def save_comments_to_file(self, comments, filename="data/comment.txt"):
+        """Lưu bình luận vào file, mỗi bình luận là một dòng."""
+        try:
+            with open(filename, "a", encoding="utf-8") as file:
+                for comment in comments:
+                    file.write(comment + "\n")
+            print(f"✅ Đã lưu {len(comments)} bình luận vào {filename}")
+        except Exception as e:
+            print(f"⚠ Lỗi lưu bình luận: {e}")
 
 
 
