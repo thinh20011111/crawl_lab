@@ -142,8 +142,8 @@ def main():
                             print(f"Đã crawl đủ {target_posts} bài post. Dừng chương trình.")
                             return  # Thoát khỏi hàm main
                         else:        
-                            print(f"TẠM DỪNG 3P")
-                            time.sleep(180)                
+                            print(f"Tạm dừng chờ post tiếp theo")
+                            time.sleep(390)                
                             
                     else:
                         print(f"Không có bài đăng thành công, tiếp tục với tài khoản tiếp theo.")
